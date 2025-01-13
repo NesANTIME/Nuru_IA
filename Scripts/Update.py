@@ -24,7 +24,7 @@ def verificator():
 
 def Update():
     VerLocal = 'Scripts/Version.txt'
-    VerNew = "https://raw.githubusercontent.com/NesANTIME/SyS-Tool/main/Version.txt"
+    VerNew = "https://raw.githubusercontent.com/NesANTIME/Nuru_IA/refs/heads/main/Scripts/Version.txt"
     
     def V_NewVer(VerNew):
         try:

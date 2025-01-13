@@ -92,7 +92,7 @@ def Logo():
     printt("██║╚██╗██║██║   ██║██╔══██╗██║   ██║╚════╝██║██╔══██║", 0.001)
     printt("██║ ╚████║╚██████╔╝██║  ██║╚██████╔╝      ██║██║  ██║", 0.001)
     printt("╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝       ╚═╝╚═╝  ╚═╝", 0.001)
-    print("[+] by NesAnTime - NuruAI V1.0\n")
+    print("[+] by NesAnTime - NuruAI V1.5\n")
 
 def nucleo_ia_nuru():
     Logo()
