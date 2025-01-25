@@ -6,25 +6,26 @@ import subprocess
 import speech_recognition as sr
 from colorama import Fore, Style, init
 init(autoreset=True)
+
 #Nivel Sistema
 def clear():
-    os.system("cls")
+    os.system("cls" if os.name == "nt" else "clear")
 
 def update():
-    subprocess.run(['python', 'Scripts/Update.py'])
-    if os.path.exists(os.path.join('Scripts/', 'NewUpdate.txt')):
+    subprocess.run(['python', 'Scripts/Update/Update.py'])
+    if os.path.exists(os.path.join('Scripts/', 'Update/NewUpdate.txt')):
         return True
     else:
         return False
     
 def New_Update_create():
-    with open(os.path.join('Scripts/', 'NewUpdate.txt'), 'r') as archivo:
-        contenid = archivo.read()
-        return contenid
+    with open(os.path.join('Scripts/', 'Update/NewUpdate.txt'), 'r') as archivo:
+        text = archivo.read()
+        return text
 
 def printt(text, delay=0.02):
-    for letra in text:
-        sys.stdout.write(letra)
+    for i in text:
+        sys.stdout.write(i)
         sys.stdout.flush()
         time.sleep(delay)
     print()
@@ -50,54 +51,23 @@ def LectorUNDISK(name):
         print("NURU-BD: El archivo no tiene el formato correcto.")
     return {}
 
-def converter_textAaudi():
-    recognizer = sr.Recognizer()
-
-    with sr.Microphone() as source:
-        print("Ajustando al ruido ambiental...")
-        recognizer.adjust_for_ambient_noise(source, duration=1)
-        
-        print("Escuchando... Habla ahora!")
-        try:
-            audio = recognizer.listen(source, timeout=5, phrase_time_limit=15)
-            print("Procesando el audio...")
-            
-            texto = recognizer.recognize_google(audio, language="es-ES")
-            return f"Has dicho: {texto}"
-            
-        except sr.WaitTimeoutError:
-            return "No se detectó ninguna voz. Tiempo de espera agotado."
-        except sr.UnknownValueError:
-            return "No se pudo entender el audio"
-        except sr.RequestError as e:
-            return f"Error en la solicitud al servicio de reconocimiento: {e}"
-
 def ModeRestart():
-    respuestas = {
-        "hola": "¡Hola! ¿Cómo puedo ayudarte?",
-        "que haces": "Ya sabes, Ajustando mi base de datos para tu próxima pregunta.",
-        "como estas": "Estoy bien, gracias. ¿Y tú?",
-        "que sabes": "Sé muchas cosas, pero no más allá de lo que esté en mi base de datos.",
-        "que eres": "Soy una inteligencia artificial Creada Por NesAnTime. Creada para responder preguntas de tu vida diaria.",
-        "cual es tu proposito": "Responder a tus preguntas y ayudarte con cosas básicas.",
-        "quien te creo": "Fui creado Por NesANTIME, un programador con gran ambición por mejorarme."
-    }
-    return respuestas
+    ModuloA = LectorUNDISK(os.path.join('Scripts/ModulosPreEntrenados/', 'ModuloA.json'))
+    return ModuloA
 
 def Logo():
     clear()
-    printt("███╗   ██╗██╗   ██╗██████╗ ██╗   ██╗      ██╗ █████╗ ", 0.001)
-    printt("████╗  ██║██║   ██║██╔══██╗██║   ██║      ██║██╔══██╗", 0.001)
-    printt("██╔██╗ ██║██║   ██║██████╔╝██║   ██║█████╗██║███████║", 0.001)
-    printt("██║╚██╗██║██║   ██║██╔══██╗██║   ██║╚════╝██║██╔══██║", 0.001)
-    printt("██║ ╚████║╚██████╔╝██║  ██║╚██████╔╝      ██║██║  ██║", 0.001)
-    printt("╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝       ╚═╝╚═╝  ╚═╝", 0.001)
-    print("[+] by NesAnTime - NuruAI V1.5\n")
+    print(Style.BRIGHT + "███╗   ██╗██╗   ██╗██████╗ ██╗   ██╗      ██╗ █████╗ ")
+    print(Style.BRIGHT + "████╗  ██║██║   ██║██╔══██╗██║   ██║      ██║██╔══██╗")
+    print(Style.BRIGHT + "██╔██╗ ██║██║   ██║██████╔╝██║   ██║█████╗██║███████║")
+    print(Style.BRIGHT + "██║╚██╗██║██║   ██║██╔══██╗██║   ██║╚════╝██║██╔══██║")
+    print(Style.BRIGHT + "██║ ╚████║╚██████╔╝██║  ██║╚██████╔╝      ██║██║  ██║")
+    print(Style.BRIGHT + "╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝       ╚═╝╚═╝  ╚═╝")
+    printt("        [+] by NesAnTime - NuruAI V2.0 [+]\n")
 
 def nucleo_ia_nuru():
     Logo()
-    update()
-
+    
     if update() == True:
         printt("¡Hola! Soy NURU-IA. " + New_Update_create())
         print(f"{Style.BRIGHT}NURU-IA: {Style.NORMAL}Puedo Ayudarte en lo que necesites. ")
@@ -107,36 +77,36 @@ def nucleo_ia_nuru():
     respuestas = ModeRestart()
 
     while True:
-        pregunta = input(f"\n {Style.BRIGHT}Tú: {Style.NORMAL}\n    ").lower()
+        pregunta = input(f"\n {Style.BRIGHT}Tú: {Style.NORMAL}\n    ").lower().strip()
 
         if pregunta == "adios":
-            printt("NURU-IA: ¡Adiós! Fue un gusto ayudarte.")
+            print(f"\n {Style.BRIGHT}NURU-IA: {Style.NORMAL}")
+            printt("      ¡Adiós! Fue un gusto ayudarte.")
             break
 
         elif pregunta == "/cargar modulo":
-            print("Cargando... Modo Developer.")
+            print(Fore.GREEN + "[!] Cargando...")
             time.sleep(1)
             Logo()
-            rut = input("Cargue el Archivo de Acceso a Memoria: ")
-            nuevas_respuestas = LectorUNDISK(rut)
+            rut = input(Fore.YELLOW + Style.DIM + " [+] Cargue la ruta del archivo de Acceso a Memoria: ")
+            respuestas_up = LectorUNDISK(rut)
             chargate(20)
-            if nuevas_respuestas:
-                respuestas.update(nuevas_respuestas)
+            if respuestas_up:
+                respuestas.update(respuestas_up)
                 time.sleep(3)
-                print(f"NURU-BD: Acceso a Memoria ({rut}) Cargado exitosamente.")
+                print(Fore.GREEN + f"[!] NURU-BD: Acceso a Memoria ({Fore.WHITE + rut + Fore.GREEN}) Cargado exitosamente.")
                 time.sleep(3)
             else:
-                print("NURU-BD: No pude cargar el acceso a memoria.")
+                print(Fore.RED + "[!] NURU-BD: No pude cargar el acceso a memoria.")
 
         elif pregunta == "/eliminar modulos":
             time.sleep(3)
             respuestas = ModeRestart()
-            print(f"NURU-BD: Acceso a Memoria ({rut}) Eliminado exitosamente.")
+            print(Fore.GREEN + f"[!] NURU-BD: Acceso a Memoria ({Fore.WHITE + rut + Fore.GREEN}) Eliminado exitosamente.")
             time.sleep(3)
 
         elif pregunta == "/voz":
-            respuet = converter_textAaudi()
-            print(respuet)
+            subprocess.run(['python', 'Scripts/Nuru-IA-MIC.py'])
             
         else:
             respuesta = respuestas.get(pregunta, "Lo siento, esa pregunta se escapa de mi entendimiento. o intenta cargar un modulo.")
